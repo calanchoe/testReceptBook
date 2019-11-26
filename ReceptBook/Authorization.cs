@@ -38,5 +38,27 @@ namespace ReceptBook
         {
             Close();
         }
+
+        private void buttonClose_Click(object sender, EventArgs e)
+        {
+            Close();
+        }
+
+        private void buttonCheckIn_Click(object sender, EventArgs e)
+        {
+            var surname = textBoxSurname.Text;
+            var name = textBoxName.Text;
+            var email = textBoxEmail.Text;
+            var password = textBoxPassword.Text;
+
+            if (DBConnect.CheckIn(textBoxSurname.Text, textBoxName.Text, textBoxEmail.Text, textBoxPassword.Text))
+            {
+                MessageBox.Show("Ви зареєстровані! Тепер перейдіть на вкладку авторізації.");
+            }
+            else
+            {
+                MessageBox.Show("Такий користувач вже існує.");
+            }
+        }
     }
 }

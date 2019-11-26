@@ -7,7 +7,6 @@ D:\MVS\ReceptBook\ReceptBook\obj\Debug\ReceptBook.exe
 D:\MVS\ReceptBook\ReceptBook\obj\Debug\ReceptBook.pdb
 D:\MVS\ReceptBook\ReceptBook\bin\Debug\FirebirdSql.Data.FirebirdClient.dll
 D:\MVS\ReceptBook\ReceptBook\obj\Debug\ReceptBook.csproj.CopyComplete
-D:\MVS\ReceptBook\ReceptBook\obj\Debug\ReceptBook.csprojAssemblyReference.cache
 D:\MVS\ReceptBook\ReceptBook\obj\Debug\ReceptBook.Authorization.resources
 D:\MVS\ReceptBook\ReceptBook\obj\Debug\ReceptBook.Form1.resources
 D:\erzsi\MVS\ReceptBook\ReceptBook\bin\Debug\ReceptBook.exe.config
@@ -23,3 +22,4 @@ D:\erzsi\MVS\ReceptBook\ReceptBook\obj\Debug\ReceptBook.csproj.CopyComplete
 D:\erzsi\MVS\ReceptBook\ReceptBook\obj\Debug\ReceptBook.exe
 D:\erzsi\MVS\ReceptBook\ReceptBook\obj\Debug\ReceptBook.pdb
 D:\erzsi\MVS\ReceptBook\ReceptBook\obj\Debug\ReceptBook.Filter.resources
+D:\MVS\Receptbook\ReceptBook\obj\Debug\ReceptBook.Filter.resources

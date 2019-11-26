@@ -179,6 +179,38 @@ namespace ReceptBook
 
         }
 
+        public static bool CheckIn(string surname, string name, string email, string password)
+        {
+            try
+            {
+                bool successFlag = false;
+                if (TryOpenConnection())
+                {
+                    using (FbCommand cmd = new FbCommand())
+                    {
+                        cmd.Connection = conn;
+                        string execCheckIn = "execute procedure CHECK_IN('" + surname + "', '" + name + 
+                                                                "', '" + email + "', '" + password + "')";
+                        cmd.CommandText = execCheckIn;
+                        int approved = Convert.ToInt32(cmd.ExecuteScalar());
+                        if (approved == 1)
+                        {
+                            successFlag = true;
+                        }
+                    }
+                }
+                else
+                    throw new Exception(errOpenConnection);
+                CloseConnect();
+                return successFlag;
+            }
+            catch (Exception e)
+            {
+                ShowError("Помилка роботи з БД:\n" + e.ToString());
+                return false;
+            }
+
+        }
         public static bool FillBindingList(ref BindingList<string> list, string table, string field)
         {
             try
