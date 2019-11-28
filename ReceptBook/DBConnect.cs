@@ -285,9 +285,10 @@ namespace ReceptBook
                         listIngr += "'" + elem + "', ";
                     listIngr += "*";
                     listIngr = listIngr.Replace(", *", "");
-                    string getData = "select NAME_RECEPT, DISCRIPTION_RECEPT from RECEPT where id IN (select ID_RECEPT from RECEPT_INGREDIENT where ID_INGREDIENT IN (select id from INGREDIENT where NAME_INGREDIENT IN (" + listIngr + ")))";
-                    table.Columns.Add("col1", "Назва рецепту");
-                    table.Columns.Add("col2", "Опис рецепту");
+                    string getData = "select ID, NAME_RECEPT, DISCRIPTION_RECEPT from RECEPT where id IN (select ID_RECEPT from RECEPT_INGREDIENT where ID_INGREDIENT IN (select id from INGREDIENT where NAME_INGREDIENT IN (" + listIngr + ")))";
+                    table.Columns.Add("col1", "ID");
+                    table.Columns.Add("col2", "Назва рецепту");
+                    table.Columns.Add("col3", "Опис рецепту");
                     using (FbCommand cmd = conn.CreateCommand())
                     {
                         cmd.CommandText = getData;
@@ -295,7 +296,7 @@ namespace ReceptBook
                         {
                             while (reader.Read())
                             {
-                                table.Rows.Add(reader[0].ToString(), reader[1].ToString());
+                                table.Rows.Add(reader[0].ToString(), reader[1].ToString(), reader[2].ToString());
                             }
                         }
                     }
@@ -312,5 +313,7 @@ namespace ReceptBook
                 return false;
             }
         }
+
+        //public static void GetDataFormSelectedRow(ref DataGridView table)
     }
 }

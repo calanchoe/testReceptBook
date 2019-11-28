@@ -12,9 +12,9 @@ namespace ReceptBook
 {
     public partial class Filter : Form
     {
-        private static BindingList<string> categoriesIngr;
-        private static BindingList<string> allIngrsOfCategory;
-        private static SortedSet<string> uniqIngridients;
+        private BindingList<string> categoriesIngr;
+        private BindingList<string> allIngrsOfCategory;
+        private SortedSet<string> uniqIngridients;
 
         public Filter()
         {
@@ -22,6 +22,7 @@ namespace ReceptBook
             categoriesIngr = new BindingList<string>();
             allIngrsOfCategory = new BindingList<string>();
             uniqIngridients = new SortedSet<string>();
+
         }
 
         private void Filter_Load(object sender, EventArgs e)
@@ -59,6 +60,42 @@ namespace ReceptBook
         private void buttonFindRecepts_Click(object sender, EventArgs e)
         {
             DBConnect.FillDataGridViewWithReceipts(ref dataGridView, uniqIngridients.ToList());
+            dataGridView.Columns["col1"].Visible = false;
         }
+
+        private void dataGridView_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+            
+        }
+
+        private int GetIdFromRow()
+        {
+            try
+            {
+                return Convert.ToInt32(dataGridView.Rows[dataGridView.SelectedCells[0].RowIndex].Cells["col1"].Value);
+            }
+            catch (Exception ex)
+            {
+                DBConnect.ShowError(ex.ToString());
+                return 0;
+            }
+
+        }
+        private void dataGridView_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
+        {
+            /* Convert.ToInt32(dataGridView.Rows[dataGridView.SelectedCells[0].RowIndex].Cells["col1"].Value);
+             ViewRecept(GetDataFormSelectedRow(out int rowId), rowId))
+                     {
+                 if (from.ShowDialog(this) == DialogResult.OK)
+                     UsersToolStripMenuItem_Click(sender, e);
+             }*/
+            using (ViewRecept form = new ViewRecept(GetIdFromRow()))
+            {
+
+                //if (form.ShowDialog(this) == DialogResult.OK)
+                //    UsersToolStripMenuItem_Click(sender, e);
+            }
+        }
+        
     }
 }

@@ -23,3 +23,4 @@ D:\erzsi\MVS\ReceptBook\ReceptBook\obj\Debug\ReceptBook.exe
 D:\erzsi\MVS\ReceptBook\ReceptBook\obj\Debug\ReceptBook.pdb
 D:\erzsi\MVS\ReceptBook\ReceptBook\obj\Debug\ReceptBook.Filter.resources
 D:\MVS\Receptbook\ReceptBook\obj\Debug\ReceptBook.Filter.resources
+D:\MVS\ReceptBook\ReceptBook\obj\Debug\ReceptBook.ViewRecept.resources
