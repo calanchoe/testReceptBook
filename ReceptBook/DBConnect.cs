@@ -314,6 +314,21 @@ namespace ReceptBook
             }
         }
 
-        //public static void GetDataFormSelectedRow(ref DataGridView table)
+        public static void GetDataFromIdReceptRow(ref DataGridView table)
+        {
+            try
+            {
+                if (TryOpenConnection())
+                {
+                   // string GetReceptById = "select ID, NAME_RECEPT, DISCRIPTION, TIME_RECEPT, LEVEL_RECEPT, CREATION_DATA_RECEPT from RECEPT and select KATEGORIA_RECEPT from INGREDIENT I";
+                }
+            }
+            catch(Exception e)
+            {
+                ShowError(e.ToString());
+                //CloseConnect();
+               // return;
+            }
+        }
     }
 }

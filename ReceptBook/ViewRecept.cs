@@ -12,21 +12,25 @@ namespace ReceptBook
 {
     public partial class ViewRecept : Form
     {
-        private int receptId { get; set; }
+        private int ReceptId { get; set; }
         public ViewRecept()
         {
             InitializeComponent();
 
-            int IdRecept;
         }
 
 
         public ViewRecept(int receptId)
         {
             InitializeComponent();
-            receptId = receptId;
+            ReceptId = receptId;
         }
         private void ViewRecept_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        private void buttonLike_Click(object sender, EventArgs e)
         {
 
         }

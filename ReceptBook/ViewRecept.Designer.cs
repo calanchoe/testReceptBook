@@ -83,6 +83,7 @@
             this.buttonLike.TabIndex = 4;
             this.buttonLike.Text = "Додати до обраного <3";
             this.buttonLike.UseVisualStyleBackColor = true;
+            this.buttonLike.Click += new System.EventHandler(this.buttonLike_Click);
             // 
             // label1
             // 
