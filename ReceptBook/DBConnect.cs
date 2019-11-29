@@ -314,20 +314,67 @@ namespace ReceptBook
             }
         }
 
-        public static void GetDataFromIdReceptRow(ref DataGridView table)
+        public static Recept GetRecept(int ReceptId)
         {
             try
             {
+                Recept dataRecept = new Recept();
+
                 if (TryOpenConnection())
                 {
-                   // string GetReceptById = "select ID, NAME_RECEPT, DISCRIPTION, TIME_RECEPT, LEVEL_RECEPT, CREATION_DATA_RECEPT from RECEPT and select KATEGORIA_RECEPT from INGREDIENT I";
+                    string getDataReceptSteps = "select NUM_STEP, DESCRIPTION_STEP from STEP where ID_RECEPT = " + ReceptId;
+                    //string getDataReceptIngrs = "select NAME_INGREDIENT from INGREDIENT where ID = " +
+                      // "(select ID_INGREDIENT, COUNT, MEASURE from RECEPT_INGREDIENT where ID_RECEPT = " + ReceptId + ")";
+                    string getDataReceptName = "select NAME_RECEPT from RECEPT where ID = " + ReceptId;
+                    string getDataReceptDiscription = "select DISCRIPTION_RECEPT from RECEPT where ID = " + ReceptId;
+                    string getDataReceptLevel = "select LEVEL_RECEPT from RECEPT where ID = " + ReceptId;
+                    string getDataReceptTime = "select TIME_RECEPT from RECEPT where ID = " + ReceptId;
+
+                    string getDataReceptCateg = "select KAT_RECEPT from RECEPT where ID = " + ReceptId;
+                    string getDataReceptDateCreate = "select CREATION_DATA_RECEPT from RECEPT where ID = " + ReceptId;
+                    string getDataReceptPhoto = "select PHOTO from RECEPT where ID = " + ReceptId;
+
+                    dataRecept.StepsCols.Add("col1", "Крок");
+                    dataRecept.StepsCols.Add("col2", "Опис кроку");
+
+                    using (FbCommand cmd = conn.CreateCommand())
+                    {
+                        cmd.CommandText = getDataReceptSteps;
+                        using (FbDataReader reader = cmd.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+
+                                dataRecept.StepsData.Add(new string[2]);
+                                for (var i = 0; i < 2; i++)
+                                    dataRecept.StepsData[dataRecept.StepsData.Count - 1][i] = reader[i].ToString();
+                            }
+                        }
+                        cmd.CommandText = getDataReceptName;
+                        dataRecept.NameText = Convert.ToString(cmd.ExecuteScalar());
+                        cmd.CommandText = getDataReceptDiscription;
+                        dataRecept.DescriptionText = Convert.ToString(cmd.ExecuteScalar());
+                        cmd.CommandText = getDataReceptLevel;
+                        dataRecept.LevelText = Convert.ToString(cmd.ExecuteScalar());
+                        cmd.CommandText = getDataReceptTime;
+                        dataRecept.TimeText = Convert.ToString(cmd.ExecuteScalar());
+                        cmd.CommandText = getDataReceptCateg;
+                        dataRecept.CategText = Convert.ToString(cmd.ExecuteScalar());
+                        cmd.CommandText = getDataReceptDateCreate;
+                        dataRecept.CreateDateText = Convert.ToString(cmd.ExecuteScalar());
+                        cmd.CommandText = getDataReceptDateCreate;
+                        dataRecept.CreateDateText = Convert.ToString(cmd.ExecuteScalar());
+                        cmd.CommandText = getDataReceptPhoto;
+                        dataRecept.PicturePath = Convert.ToString(cmd.ExecuteScalar());
+                    }
                 }
+                return dataRecept;
             }
             catch(Exception e)
             {
                 ShowError(e.ToString());
                 //CloseConnect();
-               // return;
+                return null;
             }
         }
     }

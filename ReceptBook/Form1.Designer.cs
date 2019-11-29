@@ -33,9 +33,12 @@
             this.myCabinetToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.favoritesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.userNameLabel = new System.Windows.Forms.Label();
             this.filterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.userNameLabel = new System.Windows.Forms.Label();
+            this.dataGridView1 = new System.Windows.Forms.DataGridView();
+            this.label1 = new System.Windows.Forms.Label();
             this.menuStrip1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -79,6 +82,13 @@
             this.exitToolStripMenuItem.Text = "Вийти";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
+            // filterToolStripMenuItem
+            // 
+            this.filterToolStripMenuItem.Name = "filterToolStripMenuItem";
+            this.filterToolStripMenuItem.Size = new System.Drawing.Size(45, 20);
+            this.filterToolStripMenuItem.Text = "Filter";
+            this.filterToolStripMenuItem.Click += new System.EventHandler(this.filterToolStripMenuItem_Click);
+            // 
             // userNameLabel
             // 
             this.userNameLabel.AutoSize = true;
@@ -89,18 +99,30 @@
             this.userNameLabel.Text = "label1";
             this.userNameLabel.Visible = false;
             // 
-            // filterToolStripMenuItem
+            // dataGridView1
             // 
-            this.filterToolStripMenuItem.Name = "filterToolStripMenuItem";
-            this.filterToolStripMenuItem.Size = new System.Drawing.Size(45, 20);
-            this.filterToolStripMenuItem.Text = "Filter";
-            this.filterToolStripMenuItem.Click += new System.EventHandler(this.filterToolStripMenuItem_Click);
+            this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridView1.Location = new System.Drawing.Point(16, 220);
+            this.dataGridView1.Name = "dataGridView1";
+            this.dataGridView1.Size = new System.Drawing.Size(772, 201);
+            this.dataGridView1.TabIndex = 3;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(43, 192);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(75, 13);
+            this.label1.TabIndex = 4;
+            this.label1.Text = "Наші рецепти";
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.label1);
+            this.Controls.Add(this.dataGridView1);
             this.Controls.Add(this.userNameLabel);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
@@ -109,6 +131,7 @@
             this.Load += new System.EventHandler(this.Form1_Load);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -122,6 +145,8 @@
         private System.Windows.Forms.ToolStripMenuItem favoritesToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem filterToolStripMenuItem;
+        private System.Windows.Forms.DataGridView dataGridView1;
+        private System.Windows.Forms.Label label1;
     }
 }
 

@@ -91,9 +91,10 @@ namespace ReceptBook
              }*/
             using (ViewRecept form = new ViewRecept(GetIdFromRow()))
             {
-
+                form.ShowDialog(this);
                 //if (form.ShowDialog(this) == DialogResult.OK)
-                    //UsersToolStripMenuItem_Click(sender, e);
+                //    GetIdFromRow(int ReceptId);
+                //UsersToolStripMenuItem_Click(sender, e);
             }
         }
         
