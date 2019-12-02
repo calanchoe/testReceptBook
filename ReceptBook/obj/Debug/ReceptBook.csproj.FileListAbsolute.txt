@@ -25,3 +25,7 @@ D:\erzsi\MVS\ReceptBook\ReceptBook\obj\Debug\ReceptBook.Filter.resources
 D:\MVS\Receptbook\ReceptBook\obj\Debug\ReceptBook.Filter.resources
 D:\MVS\ReceptBook\ReceptBook\obj\Debug\ReceptBook.ViewRecept.resources
 D:\MVS\ReceptBook\ReceptBook\obj\Debug\ReceptBook.csprojAssemblyReference.cache
+D:\MVS\ReceptBook\ReceptBook\obj\Debug\ReceptBook.FormMyFavorites.resources
+D:\MVS\ReceptBook\ReceptBook\obj\Debug\ReceptBook.FormFilterByCategory.resources
+D:\MVS\ReceptBook\ReceptBook\obj\Debug\ReceptBook.FormForAdminRecept.resources
+D:\MVS\ReceptBook\ReceptBook\obj\Debug\ReceptBook.FormForAdminUsers.resources

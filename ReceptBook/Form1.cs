@@ -38,6 +38,9 @@ namespace ReceptBook
                  ServerType = FbServerType.Embedded,
              };
              conn = new FbConnection(sb.ToString());*/
+
+            DBConnect.getAllRecepts(ref dataGridViewAllRecepts);
+            dataGridViewAllRecepts.Columns["col1"].Visible = false;
         }
 
         private void loginToolStripMenuItem_Click(object sender, EventArgs e)
@@ -78,6 +81,58 @@ namespace ReceptBook
         private void filterToolStripMenuItem_Click(object sender, EventArgs e)
         {
             using (Filter form = new Filter())
+            {
+                form.ShowDialog(this);
+            }
+        }
+
+        private void favoritesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            using (FormMyFavorites form = new FormMyFavorites())
+            {
+                form.ShowDialog(this);
+            }
+        }
+        private int GetIdFromRow()
+        {
+            try
+            {
+                return Convert.ToInt32(dataGridViewAllRecepts.Rows[dataGridViewAllRecepts.SelectedCells[0].RowIndex].Cells["col1"].Value);
+            }
+            catch (Exception ex)
+            {
+                DBConnect.ShowError(ex.ToString());
+                return 0;
+            }
+
+        }
+        private void dataGridViewAllRecepts_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
+        {
+            using (ViewRecept form = new ViewRecept(GetIdFromRow()))
+            {
+                form.ShowDialog(this);
+            }
+        }
+
+        private void CatalogyByReceptToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            using (FormFilterByCategory form = new FormFilterByCategory())
+            {
+                form.ShowDialog(this);
+            }
+        }
+
+        private void usersToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            using (FormForAdminUsers form = new FormForAdminUsers())
+            {
+                form.ShowDialog(this);
+            }
+        }
+
+        private void receptsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            using (FormForAdminRecept form = new FormForAdminRecept())
             {
                 form.ShowDialog(this);
             }

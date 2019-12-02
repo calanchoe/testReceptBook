@@ -156,6 +156,9 @@ namespace ReceptBook
                                 "= (select id_role from users where email = '" + login + "')";
                             cmd.CommandText = getRole;
                             AddSessionVar("UserRole", Convert.ToString(cmd.ExecuteScalar()));
+                            string getUserId = "select ID from users where email = '" + login + "'";
+                            cmd.CommandText = getUserId;
+                            AddSessionVar("UserId", Convert.ToString(cmd.ExecuteScalar()));
                             string getName = "select name_user from users where email = '" + login + "'";
                             cmd.CommandText = getName;
                             AddSessionVar("UserName", Convert.ToString(cmd.ExecuteScalar()));
@@ -323,22 +326,30 @@ namespace ReceptBook
                 if (TryOpenConnection())
                 {
                     string getDataReceptSteps = "select NUM_STEP, DESCRIPTION_STEP from STEP where ID_RECEPT = " + ReceptId;
-                    //string getDataReceptIngrs = "select NAME_INGREDIENT from INGREDIENT where ID = " +
-                      // "(select ID_INGREDIENT, COUNT, MEASURE from RECEPT_INGREDIENT where ID_RECEPT = " + ReceptId + ")";
+                    string getDataReceptIngrs = "select RECEPT_INGREDIENT.ING_COUNT AS ING_COUNT, " +
+                        "RECEPT_INGREDIENT.MEASURE AS MEASURE, INGREDIENT.NAME_INGREDIENT AS NAME " +
+                        "from RECEPT_INGREDIENT INNER JOIN INGREDIENT ON " +
+                        "RECEPT_INGREDIENT.ID_INGREDIENT = INGREDIENT.ID where ID_RECEPT = " + ReceptId;
+                        
                     string getDataReceptName = "select NAME_RECEPT from RECEPT where ID = " + ReceptId;
                     string getDataReceptDiscription = "select DISCRIPTION_RECEPT from RECEPT where ID = " + ReceptId;
                     string getDataReceptLevel = "select LEVEL_RECEPT from RECEPT where ID = " + ReceptId;
                     string getDataReceptTime = "select TIME_RECEPT from RECEPT where ID = " + ReceptId;
 
-                    string getDataReceptCateg = "select KAT_RECEPT from RECEPT where ID = " + ReceptId;
+                    string getDataReceptCateg = "select NAME_KATEG_REC from KATEGORIA_RECEPT where ID = " + 
+                        "(select KAT_RECEPT from RECEPT where ID = "+ ReceptId + ")";
                     string getDataReceptDateCreate = "select CREATION_DATA_RECEPT from RECEPT where ID = " + ReceptId;
                     string getDataReceptPhoto = "select PHOTO from RECEPT where ID = " + ReceptId;
 
                     dataRecept.StepsCols.Add("col1", "Крок");
                     dataRecept.StepsCols.Add("col2", "Опис кроку");
 
+                    dataRecept.IngrsCols.Add("col1", "Кількість");
+                    dataRecept.IngrsCols.Add("col2", "Вимір");
+                    dataRecept.IngrsCols.Add("col3", "Назва");
+
                     using (FbCommand cmd = conn.CreateCommand())
-                    {
+                    {  
                         cmd.CommandText = getDataReceptSteps;
                         using (FbDataReader reader = cmd.ExecuteReader())
                         {
@@ -348,6 +359,17 @@ namespace ReceptBook
                                 dataRecept.StepsData.Add(new string[2]);
                                 for (var i = 0; i < 2; i++)
                                     dataRecept.StepsData[dataRecept.StepsData.Count - 1][i] = reader[i].ToString();
+                            }
+                        }
+                        cmd.CommandText = getDataReceptIngrs;
+                        using (FbDataReader reader = cmd.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+
+                                dataRecept.IngrsData.Add(new string[3]);
+                                for (var i = 0; i < 3; i++)
+                                    dataRecept.IngrsData[dataRecept.IngrsData.Count - 1][i] = reader[i].ToString();
                             }
                         }
                         cmd.CommandText = getDataReceptName;
@@ -368,13 +390,246 @@ namespace ReceptBook
                         dataRecept.PicturePath = Convert.ToString(cmd.ExecuteScalar());
                     }
                 }
+                CloseConnect();
                 return dataRecept;
             }
             catch(Exception e)
             {
                 ShowError(e.ToString());
-                //CloseConnect();
+                CloseConnect();
                 return null;
+            }
+        }
+
+        public static bool addReceptToFavorites(int ReceptId)
+        {
+            try
+            {
+                bool successFlag = false;
+                if (TryOpenConnection())
+                {
+                    using (FbCommand cmd = new FbCommand())
+                    {
+                        cmd.Connection = conn;
+                        
+                        string execAddFavRecept = "execute procedure ADD_FAVORITE_RECEPT('" + ReceptId + "', '" + 
+                            GetSessionVar("UserId") + "')";
+                        cmd.CommandText = execAddFavRecept;
+                        int approved = Convert.ToInt32(cmd.ExecuteScalar());
+                        if (approved == 1)
+                        {
+                            successFlag = true;
+                        }
+                    }
+                }
+                else
+                    throw new Exception(errOpenConnection);
+                CloseConnect();
+                return successFlag;
+            }
+            catch (Exception e)
+            {
+                ShowError("Помилка роботи з БД:\n" + e.ToString());
+                //CloseConnect();
+                return false;
+            }
+        }
+        public static int GetLikes(int ReceptId)
+        {
+                try
+                {
+                    int countLikes = 0;
+                    //bool successFlag = false;
+                    if (TryOpenConnection())
+                    {
+                        using (FbCommand cmd = new FbCommand())
+                        {
+                            cmd.Connection = conn;
+
+                            string execCountLikes = "execute procedure COUNT_FAVORITES('" + ReceptId + "')";
+                            cmd.CommandText = execCountLikes;
+                            countLikes = Convert.ToInt32(cmd.ExecuteScalar());
+                            //if (countLikes == 1)
+                            //{
+                            //    successFlag = true;
+                            //}
+                        }
+                    }
+                    else
+                        throw new Exception(errOpenConnection);
+                    CloseConnect();
+                    return countLikes;
+                }
+                catch (Exception e)
+                {
+                    ShowError("Помилка роботи з БД:\n" + e.ToString());
+                    //CloseConnect();
+                    return 0;
+                }
+        }
+
+        public static bool getAllRecepts(ref DataGridView table)
+        {
+            try
+            {
+                if (TryOpenConnection())
+                {
+                    table.Rows.Clear();
+                    table.Columns.Clear();
+                    
+                    string getDataAllRecepts = "select ID, NAME_RECEPT, DISCRIPTION_RECEPT from RECEPT ";
+                    table.Columns.Add("col1", "ID");
+                    table.Columns.Add("col2", "Назва рецепту");
+                    table.Columns.Add("col3", "Опис рецепту");
+                    using (FbCommand cmd = conn.CreateCommand())
+                    {
+                        cmd.CommandText = getDataAllRecepts;
+                        using (FbDataReader reader = cmd.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                table.Rows.Add(reader[0].ToString(), reader[1].ToString(), reader[2].ToString());
+                            }
+                        }
+                    }
+                    CloseConnect();
+                    return true;
+                }
+                else
+                    throw new Exception(errOpenConnection);
+            }
+            catch (Exception e)
+            {
+                ShowError(e.ToString());
+                CloseConnect();
+                return false;
+            }
+        }
+
+        public static bool getAllFavRecepts(ref DataGridView table)
+        {
+            try
+            {
+                if (TryOpenConnection())
+                {
+                    table.Rows.Clear();
+                    table.Columns.Clear();
+
+                    string getDataAllRecepts = "select ID, NAME_RECEPT, DISCRIPTION_RECEPT from RECEPT where ID =" +
+                        "(select ID_RECEPT from FAVORITES where ID_USER =" + GetSessionVar("UserId") + ")";
+                    table.Columns.Add("col1", "ID");
+                    table.Columns.Add("col2", "Назва рецепту");
+                    table.Columns.Add("col3", "Опис рецепту");
+                    using (FbCommand cmd = conn.CreateCommand())
+                    {
+                        cmd.CommandText = getDataAllRecepts;
+                        using (FbDataReader reader = cmd.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                table.Rows.Add(reader[0].ToString(), reader[1].ToString(), reader[2].ToString());
+                            }
+                        }
+                    }
+                    CloseConnect();
+                    return true;
+                }
+                else
+                    throw new Exception(errOpenConnection);
+            }
+            catch (Exception e)
+            {
+                ShowError(e.ToString());
+                CloseConnect();
+                return false;
+            }
+        }
+
+        public static bool FillDataGridViewWithReceiptsByCateg(ref DataGridView table, string nameCategory)
+        {
+            try
+            {
+                if (TryOpenConnection())
+                {
+                    table.Rows.Clear();
+                    table.Columns.Clear();
+                    //string listIngr = "";
+                    //foreach (string elem in ingrs)
+                    //    listIngr += "'" + elem + "', ";
+                    //listIngr += "*";
+                    //listIngr = listIngr.Replace(", *", "");
+                    string getData = "select ID, NAME_RECEPT, DISCRIPTION_RECEPT from RECEPT where KAT_RECEPT = " +
+                        " (select ID from KATEGORIA_RECEPT where NAME_KATEG_REC = '" + nameCategory + "')";
+                    table.Columns.Add("col1", "ID");
+                    table.Columns.Add("col2", "Назва рецепту");
+                    table.Columns.Add("col3", "Опис рецепту");
+                    using (FbCommand cmd = conn.CreateCommand())
+                    {
+                        cmd.CommandText = getData;
+                        using (FbDataReader reader = cmd.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                table.Rows.Add(reader[0].ToString(), reader[1].ToString(), reader[2].ToString());
+                            }
+                        }
+                    }
+                    CloseConnect();
+                    return true;
+                }
+                else
+                    throw new Exception(errOpenConnection);
+            }
+            catch (Exception e)
+            {
+                ShowError(e.ToString());
+                CloseConnect();
+                return false;
+            }
+        }
+
+        public static bool getAllUsers(ref DataGridView table)
+        {
+            try
+            {
+                if (TryOpenConnection())
+                {
+                    table.Rows.Clear();
+                    table.Columns.Clear();
+                    //string getDataReceptIngrs = "select RECEPT_INGREDIENT.ING_COUNT AS ING_COUNT, " +
+                    //    "RECEPT_INGREDIENT.MEASURE AS MEASURE, INGREDIENT.NAME_INGREDIENT AS NAME " +
+                    //    "from RECEPT_INGREDIENT INNER JOIN INGREDIENT ON " +
+                    //    "RECEPT_INGREDIENT.ID_INGREDIENT = INGREDIENT.ID where ID_RECEPT = " + ReceptId;
+                    string getDataAllUsers = "select USERS.SURNAME as SURNAME, USERS.NAME_USER as NAME_USER, " +
+                        "USERS.EMAIL as EMAIL, USERS.PASSWRD as PASSWRD, ROLES.NAME_ROLE as NAME_ROLE " +
+                        "from USERS INNER JOIN ROLES ON USERS.ID_ROLE = ROLES.ID";
+                    table.Columns.Add("col1", "Призвище");
+                    table.Columns.Add("col2", "Ім'я");
+                    table.Columns.Add("col3", "Email");
+                    table.Columns.Add("col4", "Пароль");
+                    table.Columns.Add("col5", "Роль");
+                    using (FbCommand cmd = conn.CreateCommand())
+                    {
+                        cmd.CommandText = getDataAllUsers;
+                        using (FbDataReader reader = cmd.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                table.Rows.Add(reader[0].ToString(), reader[1].ToString(), reader[2].ToString(), reader[3].ToString(), reader[4].ToString());
+                            }
+                        }
+                    }
+                    CloseConnect();
+                    return true;
+                }
+                else
+                    throw new Exception(errOpenConnection);
+            }
+            catch (Exception e)
+            {
+                ShowError(e.ToString());
+                CloseConnect();
+                return false;
             }
         }
     }

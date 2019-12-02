@@ -83,18 +83,9 @@ namespace ReceptBook
         }
         private void dataGridView_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
-            /* Convert.ToInt32(dataGridView.Rows[dataGridView.SelectedCells[0].RowIndex].Cells["col1"].Value);
-             ViewRecept(GetDataFormSelectedRow(out int rowId), rowId))
-                     {
-                 if (from.ShowDialog(this) == DialogResult.OK)
-                     UsersToolStripMenuItem_Click(sender, e);
-             }*/
             using (ViewRecept form = new ViewRecept(GetIdFromRow()))
             {
                 form.ShowDialog(this);
-                //if (form.ShowDialog(this) == DialogResult.OK)
-                //    GetIdFromRow(int ReceptId);
-                //UsersToolStripMenuItem_Click(sender, e);
             }
         }
         
