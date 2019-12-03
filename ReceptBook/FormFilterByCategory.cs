@@ -13,13 +13,13 @@ namespace ReceptBook
     public partial class FormFilterByCategory : Form
     {
         private BindingList<string> categoriesRecept;
-        private SortedSet<string> category;
+        //private SortedSet<string> category;
 
         public FormFilterByCategory()
         {
             InitializeComponent();
             categoriesRecept = new BindingList<string>();
-            category = new SortedSet<string>();
+            //category = new SortedSet<string>();
         }
 
         private void FormFilterByCategory_Load(object sender, EventArgs e)

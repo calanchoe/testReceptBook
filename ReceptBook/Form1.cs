@@ -41,6 +41,8 @@ namespace ReceptBook
 
             DBConnect.getAllRecepts(ref dataGridViewAllRecepts);
             dataGridViewAllRecepts.Columns["col1"].Visible = false;
+
+            forAdminToolStripMenuItem.Visible = true;
         }
 
         private void loginToolStripMenuItem_Click(object sender, EventArgs e)
@@ -54,6 +56,16 @@ namespace ReceptBook
                                          + " " + DBConnect.GetSessionVar("UserSurname");
                     userNameLabel.Visible = true;
                     loginToolStripMenuItem.Visible = false;
+                    string userRole = DBConnect.GetSessionVar("UserRole");
+                    if (userRole != "Admin")
+                    {
+                        forAdminToolStripMenuItem.Visible = false;
+                    }
+                    else
+                    {
+                        forAdminToolStripMenuItem.Visible = true;
+                    }
+                        
                     //if (form.ShowDialog(this) != DialogResult.OK)
                     //{
                     //    MessageBox.Show("Для роботи у програмі потрібно авторизуватися.");
@@ -80,7 +92,7 @@ namespace ReceptBook
 
         private void filterToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            using (Filter form = new Filter())
+            using (Filter form = new Filter())//форма побора рецептов по ингредиентам
             {
                 form.ShowDialog(this);
             }

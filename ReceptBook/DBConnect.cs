@@ -177,6 +177,7 @@ namespace ReceptBook
             catch (Exception e)
             {
                 ShowError("Помилка роботи з БД:\n" + e.ToString());
+                CloseConnect();
                 return false;
             }
 
@@ -210,10 +211,49 @@ namespace ReceptBook
             catch (Exception e)
             {
                 ShowError("Помилка роботи з БД:\n" + e.ToString());
+                CloseConnect();
                 return false;
+
             }
 
         }
+
+        public static bool AddUser(string surname, string name, int roleid, string email, string password)
+        {
+            try
+            {
+                bool successFlag = false;
+                if (TryOpenConnection())
+                {
+                    using (FbCommand cmd = new FbCommand())
+                    {
+                        cmd.Connection = conn;
+                        string execAddUser = "execute procedure ADD_USER('" + surname + "', '" + name +
+                                                                "', '" + roleid +
+                                                                "', '" + email + "', '" + password + "')";
+                        cmd.CommandText = execAddUser;
+                        int approved = Convert.ToInt32(cmd.ExecuteScalar());
+                        if (approved == 1)
+                        {
+                            successFlag = true;
+                        }
+                    }
+                }
+                else
+                    throw new Exception(errOpenConnection);
+                CloseConnect();
+                return successFlag;
+            }
+            catch (Exception e)
+            {
+                ShowError("Помилка роботи з БД:\n" + e.ToString());
+                CloseConnect();
+                return false;
+
+            }
+
+        }
+
         public static bool FillBindingList(ref BindingList<string> list, string table, string field)
         {
             try
@@ -272,6 +312,7 @@ namespace ReceptBook
                 ShowError(e.ToString());
                 list = null;
                 return false;
+                //CloseConnect();
             }
         }
 
@@ -401,6 +442,8 @@ namespace ReceptBook
             }
         }
 
+
+
         public static bool addReceptToFavorites(int ReceptId)
         {
             try
@@ -421,16 +464,17 @@ namespace ReceptBook
                             successFlag = true;
                         }
                     }
+                    CloseConnect();
                 }
                 else
                     throw new Exception(errOpenConnection);
-                CloseConnect();
+                
                 return successFlag;
             }
             catch (Exception e)
             {
                 ShowError("Помилка роботи з БД:\n" + e.ToString());
-                //CloseConnect();
+                CloseConnect();
                 return false;
             }
         }
@@ -449,10 +493,6 @@ namespace ReceptBook
                             string execCountLikes = "execute procedure COUNT_FAVORITES('" + ReceptId + "')";
                             cmd.CommandText = execCountLikes;
                             countLikes = Convert.ToInt32(cmd.ExecuteScalar());
-                            //if (countLikes == 1)
-                            //{
-                            //    successFlag = true;
-                            //}
                         }
                     }
                     else
@@ -463,7 +503,7 @@ namespace ReceptBook
                 catch (Exception e)
                 {
                     ShowError("Помилка роботи з БД:\n" + e.ToString());
-                    //CloseConnect();
+                    CloseConnect();
                     return 0;
                 }
         }
@@ -553,11 +593,6 @@ namespace ReceptBook
                 {
                     table.Rows.Clear();
                     table.Columns.Clear();
-                    //string listIngr = "";
-                    //foreach (string elem in ingrs)
-                    //    listIngr += "'" + elem + "', ";
-                    //listIngr += "*";
-                    //listIngr = listIngr.Replace(", *", "");
                     string getData = "select ID, NAME_RECEPT, DISCRIPTION_RECEPT from RECEPT where KAT_RECEPT = " +
                         " (select ID from KATEGORIA_RECEPT where NAME_KATEG_REC = '" + nameCategory + "')";
                     table.Columns.Add("col1", "ID");
@@ -600,14 +635,15 @@ namespace ReceptBook
                     //    "RECEPT_INGREDIENT.MEASURE AS MEASURE, INGREDIENT.NAME_INGREDIENT AS NAME " +
                     //    "from RECEPT_INGREDIENT INNER JOIN INGREDIENT ON " +
                     //    "RECEPT_INGREDIENT.ID_INGREDIENT = INGREDIENT.ID where ID_RECEPT = " + ReceptId;
-                    string getDataAllUsers = "select USERS.SURNAME as SURNAME, USERS.NAME_USER as NAME_USER, " +
+                    string getDataAllUsers = "select USERS.ID as U_ID,  USERS.SURNAME as SURNAME, USERS.NAME_USER as NAME_USER, " +
                         "USERS.EMAIL as EMAIL, USERS.PASSWRD as PASSWRD, ROLES.NAME_ROLE as NAME_ROLE " +
                         "from USERS INNER JOIN ROLES ON USERS.ID_ROLE = ROLES.ID";
-                    table.Columns.Add("col1", "Призвище");
-                    table.Columns.Add("col2", "Ім'я");
-                    table.Columns.Add("col3", "Email");
-                    table.Columns.Add("col4", "Пароль");
-                    table.Columns.Add("col5", "Роль");
+                    table.Columns.Add("col1", "ID");
+                    table.Columns.Add("col2", "Призвище");
+                    table.Columns.Add("col3", "Ім'я");
+                    table.Columns.Add("col4", "Email");
+                    table.Columns.Add("col5", "Пароль");
+                    table.Columns.Add("col6", "Роль");
                     using (FbCommand cmd = conn.CreateCommand())
                     {
                         cmd.CommandText = getDataAllUsers;
@@ -615,7 +651,7 @@ namespace ReceptBook
                         {
                             while (reader.Read())
                             {
-                                table.Rows.Add(reader[0].ToString(), reader[1].ToString(), reader[2].ToString(), reader[3].ToString(), reader[4].ToString());
+                                table.Rows.Add(reader[0].ToString(), reader[1].ToString(), reader[2].ToString(), reader[3].ToString(), reader[4].ToString(), reader[5].ToString());
                             }
                         }
                     }
@@ -624,10 +660,206 @@ namespace ReceptBook
                 }
                 else
                     throw new Exception(errOpenConnection);
+                    
             }
             catch (Exception e)
             {
                 ShowError(e.ToString());
+                CloseConnect();
+                return false;
+            }
+        }
+
+        public static bool deleteUser(int userId)
+        {
+            try
+            {
+                bool successFlag = false;
+                if (TryOpenConnection())
+                {
+                    using (FbCommand cmd = new FbCommand())
+                    {
+                        cmd.Connection = conn;
+                        string execUserDel = "execute procedure DEL_USER('" + userId + "')";
+                        cmd.CommandText = execUserDel;
+                        int approved = Convert.ToInt32(cmd.ExecuteScalar());
+                        if (approved == 1)
+                        {
+                            successFlag = true;
+                        }
+                    }
+                    //CloseConnect();
+                    return successFlag;
+                }
+                else
+                {
+                    throw new Exception(errOpenConnection);
+                }
+            }
+            catch (Exception e)
+            {
+                ShowError(e.ToString());
+                CloseConnect();
+                return false;
+            }
+        }
+
+        public static bool getAllRoles(ref DataGridView table)
+        {
+            try
+            {
+                if (TryOpenConnection())
+                {
+                    table.Rows.Clear();
+                    table.Columns.Clear();
+                    string getDataAllRoles = "select ID, NAME_ROLE from ROLES";
+                    table.Columns.Add("col1", "ID");
+                    table.Columns.Add("col2", "Назва ролі");
+
+                    using (FbCommand cmd = conn.CreateCommand())
+                    {
+                        cmd.CommandText = getDataAllRoles;
+                        using (FbDataReader reader = cmd.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                table.Rows.Add(reader[0].ToString(), reader[1].ToString());
+                            }
+                        }
+                    }
+                    CloseConnect();
+                    return true;
+                }
+                else
+                    throw new Exception(errOpenConnection);
+
+            }
+            catch (Exception e)
+            {
+                ShowError(e.ToString());
+                CloseConnect();
+                return false;
+            }
+        }
+        public static bool getAllIngr(ref DataGridView table)
+        {
+            try
+            {
+                if (TryOpenConnection())
+                {
+                    table.Rows.Clear();
+                    table.Columns.Clear();
+                    string getDataAllIngr = "select INGREDIENT.NAME_INGREDIENT as NAME_INGR, "
+                        + "KATEGORIA_INGREDIENT.NAME_KATEG_INGR as NAME_CATEG from INGREDIENT INNER JOIN KATEGORIA_INGREDIENT ON "
+                        + "INGREDIENT.ID_KATEG_INGR = KATEGORIA_INGREDIENT.ID";
+                    table.Columns.Add("col1", "Інгредієнт");
+                    table.Columns.Add("col2", "Категорія");
+
+                    using (FbCommand cmd = conn.CreateCommand())
+                    {
+                        cmd.CommandText = getDataAllIngr;
+                        using (FbDataReader reader = cmd.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                table.Rows.Add(reader[0].ToString(), reader[1].ToString());
+                            }
+                        }
+                    }
+                    CloseConnect();
+                    return true;
+                }
+                else
+                    throw new Exception(errOpenConnection);
+
+            }
+            catch (Exception e)
+            {
+                ShowError(e.ToString());
+                CloseConnect();
+                return false;
+            }
+        }
+
+        public static bool addIngrToListIngrs(string nameIngr, string nameCategory)
+        {
+            try
+            {
+                bool successFlag = false;
+                if (TryOpenConnection())
+                {
+                    using (FbCommand cmd = new FbCommand())
+                    {
+                        cmd.Connection = conn;
+                        
+                        string idCategory = "select ID from KATEGORIA_INGREDIENT where NAME_KATEG_INGR = '" + nameCategory + "'";
+                        
+                        cmd.CommandText = idCategory;
+                        int catId = Convert.ToInt32(cmd.ExecuteScalar());                        
+                        string execAddNewIngr = "execute procedure ADD_INGR('" + nameIngr + "', '" +
+                            catId + "')";
+                        cmd.CommandText = execAddNewIngr;
+                        int approved = Convert.ToInt32(cmd.ExecuteScalar());
+                        if (approved == 1)
+                        {
+                            successFlag = true;
+                        }
+                    }
+                    CloseConnect();
+                }
+                else
+                    throw new Exception(errOpenConnection);
+
+                return successFlag;
+            }
+            catch (Exception e)
+            {
+                ShowError("Помилка роботи з БД:\n" + e.ToString());
+                CloseConnect();
+                return false;
+            }
+        }
+
+
+        public static bool addNewRecToListRecepts(string nameRecept, string discription, string time, string level, string datecreat, string category, string photo, string cuisine)
+        {
+            try
+            {
+                bool successFlag = false;
+                if (TryOpenConnection())
+                {
+                    using (FbCommand cmd = new FbCommand())
+                    {
+                        cmd.Connection = conn;
+
+                        string idCategory = "select ID from KATEGORIA_RECEPT where NAME_KATEG_REC = '" + category + "'";
+                        cmd.CommandText = idCategory;
+                        int catId = Convert.ToInt32(cmd.ExecuteScalar());
+
+                        string idCuis = "select ID from CUISINE where NAME_CUISINE = '" + cuisine + "'";
+                        cmd.CommandText = idCuis;
+                        int cuisId = Convert.ToInt32(cmd.ExecuteScalar());
+
+                        string execAddNewRecept = "execute procedure ADD_RECEPT('" + nameRecept + "', '" +
+                            discription + "', '" + time + "', '" + level + "', '" + datecreat + "', '" 
+                            + catId + "', '" + photo + "', '" + cuisId + "')";
+                        cmd.CommandText = execAddNewRecept;
+                        int approved = Convert.ToInt32(cmd.ExecuteScalar());
+                        if (approved == 1)
+                        {
+                            successFlag = true;
+                        }
+                    }
+                    CloseConnect();
+                }
+                else
+                    throw new Exception(errOpenConnection);
+
+                return successFlag;
+            }
+            catch (Exception e)
+            {
+                ShowError("Помилка роботи з БД:\n" + e.ToString());
                 CloseConnect();
                 return false;
             }

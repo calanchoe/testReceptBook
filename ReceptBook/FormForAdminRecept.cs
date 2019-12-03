@@ -22,5 +22,13 @@ namespace ReceptBook
             DBConnect.getAllRecepts(ref dataGridViewAllRecepts);
             dataGridViewAllRecepts.Columns["col1"].Visible = false;
         }
+
+        private void toolStripButtonAdd_Click(object sender, EventArgs e)
+        {
+            using (FormNewIngr form = new FormNewIngr())
+            {
+                form.ShowDialog(this);
+            }
+        }
     }
 }

@@ -62,6 +62,7 @@ namespace ReceptBook
         }
         private void ViewRecept_Load(object sender, EventArgs e)
         {
+            
             if (DBConnect.GetLikes(ReceptId) >= (-1))
             {
                 string likes = Convert.ToString(DBConnect.GetLikes(ReceptId));
@@ -73,12 +74,9 @@ namespace ReceptBook
 
         private void buttonLike_Click(object sender, EventArgs e)
         {
-            //ReceptId = receptId;
-            //var userId =
             if (DBConnect.addReceptToFavorites(ReceptId))
             {
                 buttonLike.Text = "Сподобалось =)";
-                //MessageBox.Show("Ви зареєстровані! Тепер перейдіть на вкладку авторізації.");
                 int likescount = Convert.ToInt32(labelCountLikes.Text);
                 int newlikescount = likescount + 1;
                 labelCountLikes.Text = Convert.ToString(newlikescount);

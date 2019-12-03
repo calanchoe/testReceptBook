@@ -29,3 +29,8 @@ D:\MVS\ReceptBook\ReceptBook\obj\Debug\ReceptBook.FormMyFavorites.resources
 D:\MVS\ReceptBook\ReceptBook\obj\Debug\ReceptBook.FormFilterByCategory.resources
 D:\MVS\ReceptBook\ReceptBook\obj\Debug\ReceptBook.FormForAdminRecept.resources
 D:\MVS\ReceptBook\ReceptBook\obj\Debug\ReceptBook.FormForAdminUsers.resources
+D:\MVS\ReceptBook\ReceptBook\obj\Debug\ReceptBook.FormAddUser.resources
+D:\MVS\ReceptBook\ReceptBook\obj\Debug\ReceptBook.FormAddStep.resources
+D:\MVS\ReceptBook\ReceptBook\obj\Debug\ReceptBook.FormNewIngr.resources
+D:\MVS\ReceptBook\ReceptBook\obj\Debug\ReceptBook.FormNewRecept.resources
+D:\MVS\ReceptBook\ReceptBook\obj\Debug\ReceptBook.FormReceptIngr.resources

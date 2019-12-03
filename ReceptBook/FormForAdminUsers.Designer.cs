@@ -59,6 +59,7 @@
             this.toolStripButtonAdd.Name = "toolStripButtonAdd";
             this.toolStripButtonAdd.Size = new System.Drawing.Size(23, 22);
             this.toolStripButtonAdd.Text = "toolStripButton1";
+            this.toolStripButtonAdd.Click += new System.EventHandler(this.toolStripButtonAdd_Click);
             // 
             // toolStripButtonDelete
             // 
@@ -68,6 +69,7 @@
             this.toolStripButtonDelete.Name = "toolStripButtonDelete";
             this.toolStripButtonDelete.Size = new System.Drawing.Size(23, 22);
             this.toolStripButtonDelete.Text = "toolStripButton2";
+            this.toolStripButtonDelete.Click += new System.EventHandler(this.toolStripButtonDelete_Click);
             // 
             // toolStripButtonUpdate
             // 
@@ -77,6 +79,7 @@
             this.toolStripButtonUpdate.Name = "toolStripButtonUpdate";
             this.toolStripButtonUpdate.Size = new System.Drawing.Size(23, 22);
             this.toolStripButtonUpdate.Text = "toolStripButton3";
+            this.toolStripButtonUpdate.Click += new System.EventHandler(this.toolStripButtonUpdate_Click);
             // 
             // dataGridViewAllUsers
             // 
@@ -84,6 +87,7 @@
             this.dataGridViewAllUsers.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridViewAllUsers.Location = new System.Drawing.Point(12, 84);
             this.dataGridViewAllUsers.Name = "dataGridViewAllUsers";
+            this.dataGridViewAllUsers.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dataGridViewAllUsers.Size = new System.Drawing.Size(776, 354);
             this.dataGridViewAllUsers.TabIndex = 1;
             // 
